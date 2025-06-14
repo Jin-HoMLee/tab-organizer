@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Export Tabs</title>
+    <style>
+      body { font-family: Arial, sans-serif; width: 270px; padding: 10px; }
+      button { width: 100%; margin-top: 8px; }
+      #status { margin-top: 12px; color: #3a3a3a; }
+      #help-section { background: #f4f4f4; border-radius: 5px; padding: 10px; margin-top: 16px; }
+      .help-section h4 { margin: 6px 0 4px;}
+      .help-section ol { margin-left: 16px; }
+    </style>
+  </head>
+  <body>
+    <h3>Export Tabs</h3>
+    <button id="export-html-btn">Export All Tabs as HTML</button>
+    <button id="export-md-btn">Export All Tabs as Markdown</button>
+    <div id="status"></div>
+    <div id="help-section" class="help-section">
+      <h4>How to import into Notion</h4>
+      <ol>
+        <li>Click one of the Export buttons above to download a file of your open tabs.</li>
+        <li>Go to Notion and open or create a page where you want to import your tabs.</li>
+        <li>
+          <b>For Markdown:</b> Drag and drop the <code>.md</code> file into Notion, or copy/paste its contents.<br>
+          <b>For HTML:</b> Open the <code>.html</code> file in your browser, select the list, and copy/paste it into Notion.
+        </li>
+        <li>Notion will create a list of links to your tabs.</li>
+      </ol>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>
