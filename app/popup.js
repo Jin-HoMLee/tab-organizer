@@ -1,3 +1,16 @@
+// Utility to get formatted current datetime
+function getFormattedDateTime() {
+  const now = new Date();
+  // Pad with zeroes
+  const pad = n => n.toString().padStart(2, '0');
+  // YYYY-MM-DD_HH-MM-SS
+  const date = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+  const time = `${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
+  // For document header: YYYY-MM-DD HH:MM:SS
+  const docTime = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  return { file: `${date}_${time}`, doc: docTime };
+}
+
 // Utility to download a file
 function downloadFile(filename, content, type) {
   const blob = new Blob([content], { type });
@@ -50,11 +63,11 @@ async function groupTabs(tabs) {
 }
 
 // Format grouped tabs as HTML
-async function tabsToHTML(tabs) {
+async function tabsToHTML(tabs, datetime) {
   const {groupMap, ungrouped} = await groupTabs(tabs);
 
   let html = "<!DOCTYPE html><html><head><meta charset='utf-8'><title>Exported Tabs</title></head><body>\n";
-  html += "<h2>Exported Tabs</h2>\n";
+  html += `<h2>Exported Tabs</h2>\n<p><em>Exported at: ${datetime}</em></p>\n`;
   // Tab groups
   for (const groupTitle of Object.keys(groupMap)) {
     html += `<h3>${groupTitle}</h3>\n<ul>\n`;
@@ -76,10 +89,11 @@ async function tabsToHTML(tabs) {
 }
 
 // Format grouped tabs as Markdown
-async function tabsToMarkdown(tabs) {
+async function tabsToMarkdown(tabs, datetime) {
   const {groupMap, ungrouped} = await groupTabs(tabs);
 
-  let md = "# Exported Tabs\n\n";
+  let md = "# Exported Tabs\n";
+  md += `\n_Exported at: ${datetime}_\n\n`;
   // Tab groups
   for (const groupTitle of Object.keys(groupMap)) {
     md += `## ${groupTitle}\n`;
@@ -103,8 +117,9 @@ async function tabsToMarkdown(tabs) {
 document.getElementById('export-html-btn').onclick = async () => {
   document.getElementById('status').innerText = "Exporting...";
   const tabs = await chrome.tabs.query({currentWindow: true});
-  const html = await tabsToHTML(tabs);
-  downloadFile("tabs-export.html", html, "text/html");
+  const dt = getFormattedDateTime();
+  const html = await tabsToHTML(tabs, dt.doc);
+  downloadFile(`tabs-export-${dt.file}.html`, html, "text/html");
   document.getElementById('status').innerText = "HTML file downloaded!";
 };
 
@@ -112,7 +127,8 @@ document.getElementById('export-html-btn').onclick = async () => {
 document.getElementById('export-md-btn').onclick = async () => {
   document.getElementById('status').innerText = "Exporting...";
   const tabs = await chrome.tabs.query({currentWindow: true});
-  const md = await tabsToMarkdown(tabs);
-  downloadFile("tabs-export.md", md, "text/markdown");
+  const dt = getFormattedDateTime();
+  const md = await tabsToMarkdown(tabs, dt.doc);
+  downloadFile(`tabs-export-${dt.file}.md`, md, "text/markdown");
   document.getElementById('status').innerText = "Markdown file downloaded!";
 };
