@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Tab Organizer",
-  "version": "0.0.0", // This will be replaced by the workflow before packaging 
+  "version": "0.0.0", 
   "description": "Export all open tabs as HTML or Markdown for easy import into Notion.",
   "permissions": ["tabs", "tabGroups"],
   "action": {
