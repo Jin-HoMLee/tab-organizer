@@ -15,6 +15,15 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Set manifest.json version from release tag
+        run: |
+          TAG_VERSION="${GITHUB_REF##*/}"      # e.g., v1.2.3
+          VERSION="${TAG_VERSION#v}"           # strips leading 'v'
+          jq --arg v "$VERSION" '.version = $v' chrome-extension/manifest.json > tmp.json && mv tmp.json chrome-extension/manifest.json
+
       - name: Install chrome-webstore-upload-cli
         run: npm install -g chrome-webstore-upload-cli
 
